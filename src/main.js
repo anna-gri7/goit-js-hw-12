@@ -1,16 +1,8 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css"; 
 
-
-
 import { getImagesByQuery } from './js/pixabay-api'
-import { createGallery } from "./js/render-functions";
-import { clearGallery } from "./js/render-functions";
-import { showLoader } from "./js/render-functions";
-import { hideLoader } from "./js/render-functions";
-import { showLoadMoreButton } from "./js/render-functions";
-import { hideLoadMoreButton } from "./js/render-functions";
-
+import { createGallery, clearGallery, showLoader, hideLoader, showLoadMoreButton, hideLoadMoreButton } from "./js/render-functions";
 
 const findForm = document.querySelector('form');
 const findBtnLoadMore = document.querySelector('.load-more');
@@ -41,7 +33,15 @@ findForm.addEventListener('submit', async (e) => {
                 })
             } else {
                 createGallery(res.hits);
-                showLoadMoreButton();
+                if (res.totalHits > 15) {
+                    showLoadMoreButton();
+                }
+                else {
+                 iziToast.error({
+                message: `We're sorry, but you've reached the end of search results.`, messageColor: 'white',
+                position: 'topLeft',
+            })
+                }
             }
         }catch (error) {
         hideLoader();
@@ -57,13 +57,18 @@ findForm.addEventListener('submit', async (e) => {
 findBtnLoadMore.addEventListener('click', async (e) => {
     e.preventDefault();
     page += 1;
+    hideLoadMoreButton();
     showLoader();
     try {
+
+
         const res = await getImagesByQuery(query, page)
         hideLoader();
+    
+     
         createGallery(res.hits);
-
-            scrollPage() 
+        scrollPage() 
+        
 
         let totalHits = res.totalHits;
         if (page*15 >= totalHits) {
@@ -72,6 +77,8 @@ findBtnLoadMore.addEventListener('click', async (e) => {
                 message: `We're sorry, but you've reached the end of search results.`, messageColor: 'white',
                 position: 'topLeft',
             })
+        } else {
+            showLoadMoreButton();
         }
         } catch (error) {
             hideLoader();
@@ -83,6 +90,8 @@ findBtnLoadMore.addEventListener('click', async (e) => {
         }
     
     } );
+
+
 
 function scrollPage() {
     const elems = document.querySelector('.gallery-item');
