@@ -55,17 +55,19 @@ main:has(.back-link) {
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
   justify-content: center;
 }
 
 .gallery-item {
   border: 1px solid black;
+  width: calc((100% - 70px) / 5);
 }
 
 .gallery-image {
-  max-width: 300px;
+  height: 180px;
+  object-fit: cover;
 }
 
 .img-info {

@@ -37,7 +37,7 @@ export const createGallery = (images) => {
         </ul> </li>`
     
     }).join('');
-    findList.innerHTML = addMarkup;
+    findList.insertAdjacentHTML ('beforeend', addMarkup);
     lightbox.refresh();
 }
 
